@@ -1,0 +1,68 @@
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> git init 
+Reinitialized existing Git repository in C:/Users/atefm/Desktop/Project/Nouveau dossier (3)/EngineerPortfolio3D/.git/
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> git add .
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> git commit -m "first commit"
+On branch main
+nothing to commit, working tree clean
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> 
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> git remote add origin https://github.com/mannaiatef/cvmannaiatef.git
+>> 
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> git push -u origin main
+Enumerating objects: 155, done.
+Counting objects: 100% (155/155), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (148/148), done.
+Writing objects: 100% (155/155), 611.63 KiB | 13.30 MiB/s, done.
+Total 155 (delta 36), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (36/36), done.
+To https://github.com/mannaiatef/cvmannaiatef.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> .\deploy-direct.ps1
+.\deploy-direct.ps1 : Impossible de charger le fichier C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D\deploy-direct.ps1. Le 
+fichier C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D\deploy-direct.ps1 n’est pas signé numériquement. Vous ne pouvez pas   
+exécuter ce script sur le système actuel. Pour plus d’informations sur l’exécution de scripts et la définition de stratégies d’exécution, voir la    
+rubrique about_Execution_Policies à l’adresse https://go.microsoft.com/fwlink/?LinkID=135170.
+Au caractère Ligne:1 : 1
++ .\deploy-direct.ps1
++ ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : Erreur de sécurité : (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+'vite' n’est pas reconnu en tant que commande interne
+ou externe, un programme exécutable ou un fichier de commandes.
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> node deploy-direct.js
+file:///C:/Users/atefm/Desktop/Project/Nouveau%20dossier%20(3)/EngineerPortfolio3D/deploy-direct.js:1
+const { execSync } = require('child_process');
+                     ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///C:/Users/atefm/Desktop/Project/Nouveau%20dossier%20(3)/EngineerPortfolio3D/deploy-direct.js:1:22
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
+
+Node.js v18.17.1
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> npm install -g gh-pages
+
+added 48 packages in 4s
+
+8 packages are looking for funding
+  run `npm fund` for details
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> npx gh-pages -d dist/public
+ProcessError: Cloning into 'C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D\node_modules\.cache\gh-pages\https!github.com!mannaiatef!cvmannaiatef.git'...
+error: unable to create file attached_assets/Pasted--npm-run-build-rest-express-1-0-0-build-vite-build-esbuild-server-index-ts-platform-nod-1744558641689.txt: Filename too long
+fatal: unable to checkout working tree
+warning: Clone succeeded, but checkout failed.
+You can inspect what was checked out with 'git status'
+and retry with 'git restore --source=HEAD :/'
+
+
+    at ChildProcess.<anonymous> (C:\Users\atefm\AppData\Roaming\npm\node_modules\gh-pages\lib\git.js:42:16)
+    at ChildProcess.emit (node:events:514:28)
+    at maybeClose (node:internal/child_process:1091:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:302:5)
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier (3)\EngineerPortfolio3D> 
