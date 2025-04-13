@@ -15,7 +15,8 @@ git config user.name "Deployment Script"
 git config user.email "deploy@example.com"
 git commit -m "Déploiement automatique %date%"
 git remote add origin https://github.com/mannaiatef/cvmannaiatef.git
-git push -f origin master:gh-pages
+
+git push origin main --force
 
 cd ..\..
 echo ✅ Déploiement terminé! Votre site sera bientôt disponible à:
