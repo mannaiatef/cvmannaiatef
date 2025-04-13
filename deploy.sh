@@ -24,4 +24,4 @@ node deploy.js
 # Message de fin
 echo "🎉 Processus de déploiement terminé!"
 echo "Votre portfolio devrait être accessible à l'adresse:"
-echo "https://$GITHUB_USERNAME.github.io/portfolio-3d/"
+echo "https://$GITHUB_USERNAME.github.io/cvmannaiatef/"

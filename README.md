@@ -15,7 +15,7 @@ Pour déployer ce portfolio sur GitHub Pages, suivez ces étapes :
 
 ### 1. Préparer votre dépôt GitHub
 
-1. Créez un nouveau dépôt sur GitHub (par exemple : `portfolio-3d`)
+1. Créez un nouveau dépôt sur GitHub (par exemple : `cvmannaiatef`)
 2. Rendez-le public pour pouvoir utiliser GitHub Pages
 
 ### 2. Connecter votre projet local à GitHub
@@ -25,7 +25,7 @@ Pour déployer ce portfolio sur GitHub Pages, suivez ces étapes :
 git init
 
 # Ajouter le dépôt distant (remplacez 'USERNAME' par votre nom d'utilisateur GitHub)
-git remote add origin https://github.com/USERNAME/portfolio-3d.git
+git remote add origin https://github.com/USERNAME/cvmannaiatef.git
 
 # Ajouter tous les fichiers
 git add .
@@ -47,7 +47,7 @@ node deploy.js
 ```
 
 3. Votre site sera déployé sur la branche `gh-pages` et accessible à l'adresse :
-   `https://[votre-nom-utilisateur].github.io/portfolio-3d/`
+   `https://[votre-nom-utilisateur].github.io/cvmannaiatef/`
 
 4. Activez GitHub Pages dans les paramètres de votre dépôt si ce n'est pas déjà fait :
    - Allez dans "Settings" > "Pages"

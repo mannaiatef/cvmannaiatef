@@ -7,7 +7,7 @@ import path from 'path';
 const BUILD_COMMAND = 'npm run build';
 const DIST_FOLDER = 'dist/public'; // Note: The build output is in dist/public
 const GH_PAGES_BRANCH = 'gh-pages';
-const REPO_NAME = 'portfolio-3d'; // Changez ceci avec le nom de votre dépôt GitHub
+const REPO_NAME = 'cvmannaiatef'; // Nom de votre dépôt GitHub
 
 console.log('🚀 Starting deployment process...');
 
