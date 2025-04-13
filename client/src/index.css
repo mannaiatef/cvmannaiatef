@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    overflow-x: hidden;
+    height: 100%;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-primary/70 backdrop-blur-lg rounded-lg border border-secondary/30 shadow-lg transition-all duration-300;
+  }
+  
+  .glass-panel:hover {
+    @apply shadow-xl shadow-secondary/30;
+  }
+  
+  .project-card {
+    @apply transition-all duration-500;
+  }
+  
+  .project-card:hover {
+    @apply -translate-y-2 scale-[1.02] shadow-xl shadow-secondary/30;
+  }
+  
+  .skill-bar {
+    @apply h-2 bg-secondary/20 rounded-full overflow-hidden;
+  }
+  
+  .skill-progress {
+    @apply h-full bg-gradient-to-r from-secondary to-accent rounded-full transition-all duration-1000;
+  }
+  
+  .timeline-item {
+    @apply relative pl-8 pb-8;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-0.5 bg-secondary;
+  }
+  
+  .timeline-item::after {
+    content: '';
+    @apply absolute -left-1 top-0 w-2.5 h-2.5 rounded-full bg-accent;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-secondary to-accent transition-all duration-300;
+  }
+  
+  .btn-primary:hover {
+    @apply -translate-y-0.5 shadow-lg shadow-secondary/30;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  .section {
+    @apply min-h-screen flex justify-center items-center py-24 px-4 relative z-10;
+  }
+  
+  .hidden-section {
+    @apply opacity-0 translate-y-8 transition-all duration-700;
+  }
+  
+  .visible {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  .nav-btn {
+    @apply w-12 h-12 rounded-full flex justify-center items-center bg-primary/70 backdrop-blur-lg border border-secondary/30 text-white cursor-pointer transition-all duration-300;
+  }
+  
+  .nav-btn:hover {
+    @apply bg-secondary/50 -translate-y-1;
+  }
+}
