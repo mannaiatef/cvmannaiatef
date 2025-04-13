@@ -14,7 +14,10 @@ git add .
 git config user.name "Deployment Script"
 git config user.email "deploy@example.com"
 git commit -m "Déploiement automatique %date%"
-git remote add origin https://github.com/mannaiatef/cvmannaiatef.git
+git remote | findstr origin >nul
+IF %ERRORLEVEL% NEQ 0 git remote add origin https://github.com/mannaiatef/cvmannaiatef.git
+
+
 
 git push origin main --force
 
