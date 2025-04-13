@@ -1,0 +1,50 @@
+ npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (3) src\main.tsxBrowserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 1669 modules transformed.
+../dist/public/index.html                   2.20 kB │ gzip:   0.91 kB
+../dist/public/assets/index-DprIiChv.css   65.46 kB │ gzip:  10.97 kB
+../dist/public/assets/index-CVKpDlvV.js   720.00 kB │ gzip: 195.91 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks  
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 16.30s
+
+  dist\index.js  5.1kb
+
+Done in 8ms
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier\EngineerPortfolio3D> npm install -g serve
+
+added 88 packages in 6s
+
+24 packages are looking for funding
+  run `npm fund` for details
+PS C:\Users\atefm\Desktop\Project\Nouveau dossier\EngineerPortfolio3D> serve -s dist/public
+
+   ┌───────────────────────────────────────────┐
+   │                                           │
+   │   Serving!                                │
+   │                                           │
+   │   - Local:    http://localhost:3000       │
+   │   - Network:  http://192.168.159.1:3000   │
+   │                                           │
+   │   Copied local address to clipboard!      │
+   │                                           │
+   └───────────────────────────────────────────┘
+
+ HTTP  13/04/2025 4:35:57 PM ::1 GET /
+ HTTP  13/04/2025 4:35:57 PM ::1 Returned 200 in 31 ms
+ HTTP  13/04/2025 4:35:57 PM ::1 GET /assets/index-CVKpDlvV.js
+ HTTP  13/04/2025 4:35:57 PM ::1 GET /assets/index-DprIiChv.css
+ HTTP  13/04/2025 4:35:57 PM ::1 Returned 200 in 4 ms
+ HTTP  13/04/2025 4:35:57 PM ::1 Returned 200 in 7 ms
+ HTTP  13/04/2025 4:35:57 PM ::1 GET /favicon.ico
+ HTTP  13/04/2025 4:35:57 PM ::1 Returned 200 in 3 ms
