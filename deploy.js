@@ -34,7 +34,27 @@ try {
   fs.writeFileSync(path.join(DIST_FOLDER, 'index.html'), modifiedIndexHtml);
   
   // 4. Create 404.html that redirects back to index.html for SPA routing
-  fs.copyFileSync(path.join(DIST_FOLDER, 'index.html'), path.join(DIST_FOLDER, '404.html'));
+  // Check if we have a custom 404.html file
+  if (fs.existsSync(path.join('public', '404.html'))) {
+    console.log('📄 Copying custom 404.html file...');
+    const custom404Html = fs.readFileSync(path.join('public', '404.html'), 'utf8');
+    // Update paths in custom 404.html
+    const modified404Html = custom404Html
+      .replace(/href="\//g, `href="/${REPO_NAME}/`)
+      .replace(/src="\//g, `src="/${REPO_NAME}/`)
+      .replace(/window.location.href = "\//g, `window.location.href = "/${REPO_NAME}/`);
+    
+    fs.writeFileSync(path.join(DIST_FOLDER, '404.html'), modified404Html);
+  } else {
+    console.log('📄 Creating default 404.html file...');
+    fs.copyFileSync(path.join(DIST_FOLDER, 'index.html'), path.join(DIST_FOLDER, '404.html'));
+  }
+  
+  // 5. Copy _redirects file if it exists
+  if (fs.existsSync(path.join('public', '_redirects'))) {
+    console.log('📄 Copying _redirects file...');
+    fs.copyFileSync(path.join('public', '_redirects'), path.join(DIST_FOLDER, '_redirects'));
+  }
   
   // 5. Deploy to GitHub Pages
   console.log('🚢 Deploying to GitHub Pages...');

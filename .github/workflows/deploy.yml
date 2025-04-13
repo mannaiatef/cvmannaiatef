@@ -43,6 +43,18 @@ jobs:
         run: |
           cp ./dist/public/index.html ./dist/public/404.html
           
+      - name: Copy redirects file
+        run: |
+          if [ -f ./public/_redirects ]; then
+            cp ./public/_redirects ./dist/public/_redirects
+          fi
+          
+      - name: Copy custom 404 page
+        run: |
+          if [ -f ./public/404.html ]; then
+            cp ./public/404.html ./dist/public/404.html
+          fi
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
