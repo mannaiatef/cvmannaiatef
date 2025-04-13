@@ -1,68 +1,97 @@
-// deploy.js - Script to deploy to GitHub Pages
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 // Configuration
-const BUILD_COMMAND = 'npm run build';
-const DIST_FOLDER = 'dist/public'; // Note: The build output is in dist/public
-const GH_PAGES_BRANCH = 'gh-pages';
-const REPO_NAME = 'cvmannaiatef'; // Nom de votre dépôt GitHub
+const DIST_FOLDER = 'dist/public';
+const REPO_NAME = 'cvmannaiatef';
+const GITHUB_REPO = 'https://github.com/mannaiatef/cvmannaiatef.git';
 
-console.log('🚀 Starting deployment process...');
-
-try {
-  // 1. Build the project
-  console.log('📦 Building the project...');
-  // Set environment variable for production build
-  process.env.NODE_ENV = 'production';
-  execSync(BUILD_COMMAND, { stdio: 'inherit' });
-  
-  // 2. Create or update .nojekyll file to prevent Jekyll processing
-  console.log('📄 Creating .nojekyll file...');
-  fs.writeFileSync(path.join(DIST_FOLDER, '.nojekyll'), '');
-  
-  // 3. Create a simple index.html redirect for sub-paths
-  console.log('📝 Creating path fallback for SPA routing...');
-  const indexHtml = fs.readFileSync(path.join(DIST_FOLDER, 'index.html'), 'utf8');
-  
-  // Modify paths in index.html for GitHub Pages
-  const modifiedIndexHtml = indexHtml
-    .replace(/href="\//g, `href="/${REPO_NAME}/`)
-    .replace(/src="\//g, `src="/${REPO_NAME}/`);
-  
-  fs.writeFileSync(path.join(DIST_FOLDER, 'index.html'), modifiedIndexHtml);
-  
-  // 4. Create 404.html that redirects back to index.html for SPA routing
-  // Check if we have a custom 404.html file
-  if (fs.existsSync(path.join('public', '404.html'))) {
-    console.log('📄 Copying custom 404.html file...');
-    const custom404Html = fs.readFileSync(path.join('public', '404.html'), 'utf8');
-    // Update paths in custom 404.html
-    const modified404Html = custom404Html
-      .replace(/href="\//g, `href="/${REPO_NAME}/`)
-      .replace(/src="\//g, `src="/${REPO_NAME}/`)
-      .replace(/window.location.href = "\//g, `window.location.href = "/${REPO_NAME}/`);
-    
-    fs.writeFileSync(path.join(DIST_FOLDER, '404.html'), modified404Html);
-  } else {
-    console.log('📄 Creating default 404.html file...');
-    fs.copyFileSync(path.join(DIST_FOLDER, 'index.html'), path.join(DIST_FOLDER, '404.html'));
+// Fonction d'exécution de commande shell avec affichage
+function exec(command, options = {}) {
+  console.log(`📋 Exécution: ${command}`);
+  try {
+    return execSync(command, { 
+      stdio: 'inherit',
+      ...options
+    });
+  } catch (error) {
+    console.error(`❌ Erreur lors de l'exécution de: ${command}`);
+    throw error;
   }
-  
-  // 5. Copy _redirects file if it exists
-  if (fs.existsSync(path.join('public', '_redirects'))) {
-    console.log('📄 Copying _redirects file...');
-    fs.copyFileSync(path.join('public', '_redirects'), path.join(DIST_FOLDER, '_redirects'));
-  }
-  
-  // 5. Deploy to GitHub Pages
-  console.log('🚢 Deploying to GitHub Pages...');
-  execSync(`npx gh-pages -d ${DIST_FOLDER}`, { stdio: 'inherit' });
-  
-  console.log('✅ Deployment complete! Your site should be available soon at:');
-  console.log(`   https://[votre-nom-utilisateur].github.io/${REPO_NAME}/`);
-} catch (error) {
-  console.error('❌ Deployment failed:', error);
-  process.exit(1);
 }
+
+// Fonction principale de déploiement
+async function deploy() {
+  try {
+    console.log('🚀 Démarrage du déploiement...\n');
+
+    // Étape 1: Construction du projet
+    console.log('\n📦 Construction du projet...');
+    exec('npm run build');
+
+    // Étape 2: Correction des chemins
+    console.log('\n🔧 Correction des chemins pour GitHub Pages...');
+    
+    // S'assurer que le dossier de destination existe
+    if (!fs.existsSync(DIST_FOLDER)) {
+      console.error(`❌ Le dossier ${DIST_FOLDER} n'existe pas!`);
+      process.exit(1);
+    }
+    
+    // 2.1 Modifier index.html
+    console.log('📝 Mise à jour de index.html...');
+    const indexPath = path.join(DIST_FOLDER, 'index.html');
+    let indexContent = fs.readFileSync(indexPath, 'utf8');
+    
+    // Remplacer les chemins absolus par des chemins relatifs avec le préfixe du dépôt
+    indexContent = indexContent
+      .replace(/href="\//g, `href="/${REPO_NAME}/`)
+      .replace(/src="\//g, `src="/${REPO_NAME}/`);
+    
+    fs.writeFileSync(indexPath, indexContent);
+    
+    // 2.2 Créer une copie de index.html comme 404.html
+    console.log('📄 Création de 404.html...');
+    fs.writeFileSync(path.join(DIST_FOLDER, '404.html'), indexContent);
+    
+    // 2.3 Créer le fichier .nojekyll
+    console.log('📄 Création du fichier .nojekyll...');
+    fs.writeFileSync(path.join(DIST_FOLDER, '.nojekyll'), '');
+
+    // Étape 3: Déploiement sur GitHub Pages
+    console.log('\n🚢 Déploiement vers GitHub Pages...');
+    
+    // Naviguer vers le dossier de build
+    process.chdir(DIST_FOLDER);
+    
+    // Initialiser un dépôt Git
+    exec('git init');
+    exec('git add -A');
+    exec('git config user.name "Deployment Script"');
+    exec('git config user.email "deploy@example.com"');
+    exec('git commit -m "Déploiement automatique avec chemins corrigés"');
+    
+    // Ajouter le dépôt distant et pousser les modifications
+    try {
+      exec(`git remote add origin ${GITHUB_REPO}`);
+    } catch (e) {
+      // Si le remote existe déjà, continuez
+    }
+    
+    exec('git push -f origin master:gh-pages');
+    
+    // Retourner au dossier principal
+    process.chdir('../..');
+    
+    console.log('\n✅ Déploiement terminé avec succès!');
+    console.log(`📱 Votre site sera bientôt disponible à: https://mannaiatef.github.io/${REPO_NAME}/`);
+    
+  } catch (error) {
+    console.error('\n❌ Le déploiement a échoué!', error);
+    process.exit(1);
+  }
+}
+
+// Exécuter le déploiement
+deploy();

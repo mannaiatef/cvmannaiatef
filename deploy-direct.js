@@ -1,69 +1,59 @@
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 // Configuration
-const BUILD_COMMAND = 'npm run build';
 const DIST_FOLDER = 'dist/public';
-const REPO_URL = 'https://github.com/mannaiatef/cvmannaiatef.git';
+const REPO_NAME = 'cvmannaiatef';
 
-console.log('🚀 Démarrage du déploiement direct vers gh-pages...');
+console.log('🚀 Démarrage du déploiement direct...');
 
 try {
-  // 1. Construire le projet
+  // 1. Construction du projet
   console.log('📦 Construction du projet...');
-  process.env.NODE_ENV = 'production';
-  execSync(BUILD_COMMAND, { stdio: 'inherit' });
+  execSync('npm run build', { stdio: 'inherit' });
+
+  // 2. Vérifier que le dossier de build existe
+  if (!fs.existsSync(DIST_FOLDER)) {
+    console.error(`❌ Erreur: Le dossier ${DIST_FOLDER} n'existe pas après la construction.`);
+    process.exit(1);
+  }
+
+  // 3. Correction des chemins dans index.html
+  console.log('🔧 Correction des chemins dans les fichiers HTML...');
+  const indexPath = path.join(DIST_FOLDER, 'index.html');
   
-  // 2. Créer le fichier .nojekyll
-  console.log('📄 Création du fichier .nojekyll...');
-  fs.writeFileSync(path.join(DIST_FOLDER, '.nojekyll'), '');
-  
-  // 3. Créer un dossier temporaire pour le déploiement
-  console.log('📁 Préparation des fichiers pour le déploiement...');
-  const tempDir = 'temp-deploy';
-  
-  // Supprimer le dossier temporaire s'il existe
-  if (fs.existsSync(tempDir)) {
-    execSync(`rm -rf ${tempDir}`);
+  if (!fs.existsSync(indexPath)) {
+    console.error(`❌ Erreur: Le fichier ${indexPath} n'existe pas.`);
+    process.exit(1);
   }
   
-  // Créer le dossier temporaire
-  fs.mkdirSync(tempDir);
+  let indexContent = fs.readFileSync(indexPath, 'utf8');
   
-  // Copier les fichiers de build dans le dossier temporaire
-  execSync(`cp -r ${DIST_FOLDER}/* ${tempDir}/`);
-  execSync(`cp ${DIST_FOLDER}/.nojekyll ${tempDir}/`);
+  // Remplacer les chemins absolus par des chemins avec le préfixe du dépôt
+  indexContent = indexContent
+    .replace(/href="\//g, `href="/${REPO_NAME}/`)
+    .replace(/src="\//g, `src="/${REPO_NAME}/`);
   
-  // 4. Initialiser un nouveau dépôt git et pousser vers gh-pages
-  console.log('🚢 Déploiement vers la branche gh-pages...');
+  fs.writeFileSync(indexPath, indexContent);
   
-  // Commandes Git à exécuter dans le dossier temporaire
-  const commands = [
-    'git init',
-    'git add .',
-    'git config user.name "GitHub Actions"',
-    'git config user.email "actions@github.com"',
-    'git commit -m "Déploiement automatique"',
-    `git remote add origin ${REPO_URL}`,
-    'git push -f origin master:gh-pages'
-  ];
+  // 4. Créer 404.html (nécessaire pour le routage côté client sur GitHub Pages)
+  console.log('📄 Création de 404.html...');
+  fs.writeFileSync(path.join(DIST_FOLDER, '404.html'), indexContent);
   
-  // Exécuter les commandes
-  process.chdir(tempDir);
-  commands.forEach(cmd => {
-    execSync(cmd);
-  });
+  // 5. Créer .nojekyll (pour désactiver le traitement Jekyll sur GitHub Pages)
+  console.log('📄 Création de .nojekyll...');
+  fs.writeFileSync(path.join(DIST_FOLDER, '.nojekyll'), '');
+
+  console.log('✅ Préparation terminée!');
+  console.log('\n📋 Instructions manuelles pour finaliser le déploiement:');
+  console.log('1. Copiez tout le contenu du dossier "dist/public"');
+  console.log('2. Allez sur GitHub et créez une nouvelle branche "gh-pages" (si elle n\'existe pas déjà)');
+  console.log('3. Téléchargez-y les fichiers copiés');
+  console.log('4. Activez GitHub Pages pour la branche "gh-pages" dans les paramètres du dépôt');
+  console.log(`\n📱 Votre site sera ensuite disponible à: https://mannaiatef.github.io/${REPO_NAME}/`);
   
-  // Revenir au dossier racine
-  process.chdir('..');
-  
-  // Nettoyer
-  execSync(`rm -rf ${tempDir}`);
-  
-  console.log('✅ Déploiement terminé! Votre site devrait être disponible bientôt à:');
-  console.log('   https://mannaiatef.github.io/cvmannaiatef/');
 } catch (error) {
-  console.error('❌ Échec du déploiement:', error.message);
+  console.error('❌ Erreur lors du déploiement:', error);
   process.exit(1);
 }
